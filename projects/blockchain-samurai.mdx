@@ -1,0 +1,146 @@
+---
+title: "Blockchain Samurai"
+summary: "CNFT-based game on ADA blockchain. Features custom art, interactive map, and voting system. Built with Express.js, MySQL, and Kubernetes. Showcases full-stack and DevOps skills."
+headerImage: "/projects/blockchain-samurai.png"
+startDate: "2021-10-01"
+endDate: "2022-03-27"
+status: "Archived"
+githubUrl: "https://github.com/Blockchain-Samurai"
+websiteUrl: "https://www.cardanocube.com/projects/blockchain-samurai"
+technologies: ["Kubernetes","Docker","MySQL", "Typescript"]
+keywords: ["API integration", "Web development", "Instagram analytics", "Firebase application", "Social media dashboard", "Facebook Graph API", "User authentication", "Data visualization", "JavaScript programming", "Bootstrap framework"]
+---
+
+Blockchain Samurai was a bit of a passion project for my friend/business partner, [Johnny Staley](https://johnnystaley.com/), and I. This was a CNFT project based on the Cardano (ADA) blockchain. Blockchain Samurai was a lore-heavy, feudal Japan themed CNFT.
+
+While I have not been invested into crypto currency, or particularly interested in it up to this point, this project sounded like a fun way to create art that others may enjoy and it helped that crypto was taking off at the time. Additionally, I was very interested in the technical side of building a product from scratch and creating a community around it. 
+
+Between Johnny and I, we both wore many different hats while working on this project. While we both split the creative portions of the project, such as lore & artwork, Johnny focused on the business, vision, and direction of the project while I focused on the community and technical side. This was a rather large project for me at the time with development being around 5 months and without much knowledge of deploying/distributing large applications.
+
+## The Vision
+![The Vision](/projects/bcs/region1.jpg)
+> Blockchain Samurai is a CNFT project that encourages community interaction in the Japanese-style fantasy world of Hachi-Sho, Land of the Eight Provinces. Throughout the lifetime of the project, Blockchain Samurai plans to release 10 seasons, with each season containing 10 Chapter releases. As releases progress, samurai clans will be able to influence the lore and develop a community-driven narrative that will shape future chapters.
+
+Blockchain Samurai aimed to develop an interactive, samurai-themed world that is strife with conflict and rich with lore. With the release of each chapter we will build this world together, with our community, for the sake of Hachi-Sho.
+
+## The Architecture
+Now that we understand the premise of the project, lets dive into the architecture I designed for it.
+### Deployment Environment
+- Deployed on a Digital Ocean Kubernetes cluster
+- I used containerization for consistent deployment across environments
+### Core Services
+The application consisted of four main services:
+1. Frontend: User interface for the interactive platform
+2. Core API: Backend service handling business logic and blockchain interactions
+3. Ghost Blog: Content management system for project updates and announcements
+4. Discord Bot: Community engagement tool for real-time interactions
+### CI/CD Pipeline
+- GitHub Actions were used for automated building of Docker containers
+- Streamlined deployment process to the Kubernetes cluster
+- Rolling updates were used to ensure minimal downtime within the cluster
+### Load Balancing
+- Implemented a network load balancer to distribute traffic across services
+- Ensured consistent performance for thousands of daily visitors
+### Scalability
+- Kubernetes orchestration allowed for easy scaling of individual services as needed. Both horizontal and vertical scaling was implemented.
+- Containerized architecture provided flexibility for future expansions and updates
+
+This architecture allowed us to scale up/down for fluctuating traffic and API calls while maintaining decent performance.
+
+## Frontend
+The frontend of Blockchain Samurai was crafted with attention to detail, combining custom design with efficient web technologies:
+### Technologies Used
+- HTML, JavaScript, and CSS
+- Bootstrap framework for responsive design
+### Design Process
+![Wireframe Design](/projects/bcs/wire-box.jpg)
+- Custom-designed from scratch
+- Utilized wireframing techniques with pen and paper for initial layouts
+- All artwork created in-house by myself and my partner, Johnny
+### Key Pages
+#### Landing Page
+![Landing Page Animation](/projects/bcs/landing.gif)
+- Featured an eye-catching 8-layered parallax image, hand-drawn by me
+- Showcased NFT collection to immediately engage visitors
+- Included a roadmap to outline project milestones and future plans
+#### Bushido Index (Main Platform)
+![Bushido Index Animation](/projects/bcs/bushido-index.gif)
+- Centerpiece: Interactive map of "Hachi-Sho" continent
+    - Zoom functionality for detailed exploration
+    - Toggleable layers for regional boundaries, roads, and settlements
+    - Clickable regions revealing lore and information about cities and towns
+- Clan Listings:
+    - Displayed samurai belonging to each clan
+    - Implemented a "Pokémon card" style presentation
+    - Custom holographic effects for visual appeal and uniqueness
+#### Admin Panel
+- Analytics Dashboard:
+    - Charts displaying daily active users
+    - Current user count metrics
+- User Management:
+    - Paginated table of all users
+    - Functionality to modify user roles
+- Content Management System (CMS):
+    - Interface for adding new samurai characters to the platform
+    - Tools for creating and managing clans
+    - Streamlined process for updating game content without direct database access
+
+The admin panel served as a crucial tool for monitoring platform activity, managing user access, and efficiently updating game content. Its user-friendly interface allowed for quick adjustments and additions to the Blockchain Samurai ecosystem, ensuring the platform remained dynamic and engaging for our community.
+
+### User Experience Focus
+- Intuitive navigation between different sections of the platform
+- Engaging visual elements to keep users immersed in the Samurai theme
+- Responsive design ensuring seamless experience across various devices
+
+The frontend of Blockchain Samurai was designed to not only showcase the NFT collection but also to immerse users in the rich lore and world of Hachi-Sho. The combination of custom artwork and interactive elements helped create a unique and engaging platform for our community.
+
+## Backend
+
+The backend of Blockchain Samurai was built with scalability, security, and performance in mind, utilizing modern technologies. That being said, there are still many things I would adjust looking back on it.
+### Core Technologies
+- Express.js: Main framework for building the API
+- TypeORM: ORM for database management and entity relationships
+- Node-cache: For implementing caching to optimize performance
+### Authentication and Authorization
+- OAuth2 integration with Discord:
+    - Allowed seamless login for users
+    - Planned future integration with Discord Bot for enhanced community features
+- Role-Based Access Control (RBAC):
+    - Implemented to manage user permissions efficiently
+    - Enabled admin users to manage the community effectively
+    - Restricted access to sensitive API resources based on user roles
+### Key Features
+#### Event Voting System
+- Allowed users to participate in shaping the world of Hachi-Sho
+- Endpoints for creating, managing, and tallying votes on world events
+#### Content Management
+- Admin-specific endpoints for:
+    - Creating and managing samurai characters
+    - Establishing and updating clans
+- Multer integration for file uploads:
+    - Enabled admins to upload graphics for samurai and clans
+#### Database Management
+- TypeORM used for:
+    - Defining and managing database entities
+    - Handling database connections
+    - Simplifying database operations and migrations
+#### Performance Optimization
+- Implemented caching using node-cache:
+    - Reduced database load for frequently accessed data
+    - Improved response times for high-traffic endpoints
+### API Structure
+- RESTful design principles followed for clear and consistent endpoint structure
+- Modular architecture for easier maintenance and scalability
+
+The backend of Blockchain Samurai was designed to provide a foundation for the platform. Its integration with Discord, coupled with the event voting system, created a dynamic and interactive experience for users. The use of TypeORM and caching mechanisms ensured efficient data management and optimal performance, even under high load.
+
+## Conclusion
+While in the end Blockchain Samurai failed to go to market as it was unable to find a sustainable business model, I learned probably the most from this project. It was a significant milestone in my development journey, showcasing the integration of blockchain technology, and community-driven content creation. This project demonstrated my ability to architect and implement a complex, scalable web application that handled thousands of daily users.
+
+### Key Achievements:
+1. Successfully deployed a multi-service application using Kubernetes, showcasing skills in modern DevOps practices.
+2. Designed and implemented an engaging frontend with custom artwork and interactive elements, enhancing user experience.
+3. Developed a backend with OAuth2 integration, RBAC, and efficient database management.
+4. Implemented a master/slave database configuration, ensuring high availability and performance.
+
+I believe this project not only served as a showcase of my technical skills but also to my ability to bring a creative vision to life. The project's initial success in attracting and retaining users demonstrated the potential of blending blockchain technology with interactive, community-driven content.

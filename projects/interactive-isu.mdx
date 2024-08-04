@@ -1,0 +1,27 @@
+---
+title: "Interactive ISU"
+summary: "Interactive ISU transformed a 2D ISU campus map into an engaging 3D interactive experience using ArcGIS, Blender, and Unity 3D, complete with points of interest, dynamic camera movements, and a clean UI."
+headerImage: "/projects/interactive-isu.png"
+startDate: "2018-03-01"
+endDate: "2018-04-07"
+status: "Archived"
+audio: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/output.mp3"
+technologies: ["C#", "Unity 3D", "Blender", "ArcGIS"]
+keywords: ["Interactive ISU", "ISU campus map", "ArcGIS mapping", "3D modeling with Blender", "Unity 3D projects", "interactive campus map", "Blender 3D modeling", "Unity 3D development", "campus points of interest", "C# camera scripting"]
+---
+
+Interactive ISU is an engaging digital representation of the Indiana State University campus. This project involved creating a detailed 2D map using ArcGIS, transforming it into a 3D model with Blender, and integrating it into Unity 3D to create an interactive experience complete with points of interest and dynamic camera movements.
+
+## Step-by-Step Process
+1. Creating the 2D Map
+- The journey began with a physical map of ISU from my freshman year. I scanned this map at 300dpi and imported the image into ArcMap. Using ArcCatalog, I created three shapefiles: Paths, Buildings, and Points of Interest (POI). Once these shapefiles were loaded into ArcMap, I meticulously edited them, starting with the 40 buildings on campus, then the paths, and finally the points of interest.
+![The Base Map](/projects/interactive-isu/basemap.png)
+2. Creating the 3D Map
+- Transitioning from 2D to 3D was the most time-consuming part of the project. I used Blender to model, UV map, and texture the campus buildings. Starting with the base map, I laid out the foundations of the buildings and extruded them to create different levels. After forming the general shapes, I added details such as windows and assigned materials to various surfaces (e.g., brick, glass, roofing). These materials later received seamless 2D texture overlays for added depth.
+![The 3D Map](/projects/interactive-isu/3dmap.png)
+3. Design and Detailing
+- Detailing in this context included full rendering, lighting, and programming. After importing the models into Unity 3D, I hand-drew paths, roads, and landscapes, using minimalist textures to maintain a clean look. I then added a user interface (UI) system for the main menu and pause menu, controlled by scripts written in C#. Camera effects like ambient occlusion and depth of field were implemented to enhance the scene's realism.
+![Detailing](/projects/interactive-isu/render.png)
+
+## Final Product
+The result of this project is an interactive and visually appealing 3D map of the ISU campus. Users can explore various points of interest with ease, thanks to the dynamic camera movements and intuitive UI. This project not only showcases my technical skills in ArcGIS, Blender, and Unity 3D but also my ability to integrate multiple technologies to create a cohesive and engaging user experience.

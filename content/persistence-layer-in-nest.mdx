@@ -1,0 +1,258 @@
+---
+title: "Building and Integrating a Persistence Layer in NestJS with Prisma"
+publishedAt: "2024-06-26"
+summary: "Idk man, something cool!"
+headerImage: "/blog/persistence-layer.png"
+---
+Building and maintaining applications typically require a structured way to handle database interactions. In Node.js applications, you can use an ORM (Object-Relational Mapping) tool such as Prisma to simplify database interactions as well as ensuring type safety. This will be built in [NestJS](https://nestjs.com/), which is a progressive Node.js framework for building efficient, scalable, and enterprise-grade server-side applications with TypeScript/JavaScript.
+
+In this article, I will walk you through the process of setting up Prisma in a NestJS project by creating a dedicated persistence module. This module will house a service that exports a Prisma client that will allow you to make database interactions more efficiently and consistently across your application.
+
+If you would rather examine the code, I have gone ahead and uploaded it to Github. Feel free to take a [look here](https://www.github.com/cmershon2)
+## Prerequisites
+Before diving into the implementation, make sure you have the following prerequisites:
+1. **Node.js and npm**: Make sure you have Node.js (version 16 or higher) and npm installed on your machine. You can download them from [nodejs.org](https://nodejs.org/).
+2. **NestJS CLI**: The NestJS CLI helps in quickly scaffolding and managing NestJS projects. You can install it globally using npm:
+```sh
+npm install -g @nestjs/cli
+```
+3. **Postgres Database**: I will be using Postgres for my database. You can use local installation or a cloud service like [Neon](https://neon.tech/).
+4. **Basic Knowledge of TypeScript and NestJS**: Familiarity with TypeScript and NestJS will help you follow along.
+5. **Prisma CLI**: Prisma CLI is necessary for initializing and managing Prisma in your project. Install it globally using npm:
+```sh
+npm install -g prisma
+```  
+
+Once these prerequisites are in place, you're all set to start building a persistence module in your NestJS application using Prisma.
+## Setting Up the Project
+If you are starting from scratch, create a new NestJS project using the Nest CLI:
+```
+nest new project-name
+```
+
+Next, install the required dependencies:
+```
+npm install prisma @prisma/client
+```
+
+## Setting up Prisma
+Before building out our functionality, lets set up our connection to our database. To do so, we will need to initialize Prisma by using the following command:
+```
+npx prisma init
+```
+
+This will create a Prisma directory in your project that includes a `prisma.schema` file. This file is used to configure the connection to your database as well as the schema used to define the tables.
+
+You will also notice that a `.env` file has been created in the root directory of your project. This is where secure variables such as connection information to your database is stored. If you have not worked with `.env` files before, these should be kept private and not shared on Github or anywhere else.
+
+Let's first add our database connection information to the `.env` file so it may look like the following:
+``` env
+DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
+```
+> If you are using Neon, the connection string can be grabbed from the Dashboard > Connection Details section
+
+Next, let's define the tables we will be using in the `prisma.schema` file.
+``` schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int          @id @default(autoincrement())
+  email             String       @unique
+  displayName       String
+  password          String
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+```
+If we take a look at the schema, we can see that first we are using the `DATABASE_URL` from the `.env` file to set up our connection to database.
+
+Next, we are creating a model named User. The User model contains information about the user such as a unique id, email, display name, and password.
+
+With our schema made, we can now migrate it to our database by using the following command:
+```
+npx prisma migrate dev --name init
+```
+
+After completing the prompt in the terminal, this command will do two things:
+1. It will create a new SQL migration file for this migration
+2. It will run the SQL migration file against the database
+## Creating the Persistence Module
+Now that we have created a connection to our database and initialized it, we can build a client to interact with it.
+
+In NestJS, modules are used to organize and encapsulate related functionality. Let's create a `persistence` module we can use to interact with our Prisma client.
+
+To create a module, you can either manually create the directory and the scripts inside it or you can use NestJS's CLI tool to generate the modules for you. To generate the `persistence` module, you can run the following command:
+``` terminal
+nest generate mo persistence
+```
+> For additional information on the `nest generate` tool, you can run `nest generate --help` 
+
+This will create a directory named `persistence` and contain a new module script `persistence.module.ts` which will can be used to export services in the module. Next, we will create the persistence service.
+``` terminal
+nest generate s persistence
+```
+This will create 2 scripts:
+- `persistence.service.ts` - used to create the service
+- `persistence.service.spec.ts` - used for creating unit tests for the service
+I will not be covering unit testing in this article as I believe it needs its own article to cover so we will be ignoring the spec files for now.
+
+In the `persistence.service.ts` use the following to define the Prisma service:
+``` typescript
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+
+@Injectable()
+export class PersistenceService extends PrismaClient implements OnModuleInit {
+    async onModuleInit() {
+        await this.$connect();
+    }
+}
+```
+As Prisma follows a singleton pattern, this script allows for a single Prisma instance to be initialized and will create a client for us to interact with.
+
+Now that the service is made, we can update the module to export the `PersistenceService` so we can use it across the rest of our application.
+``` typescript
+import { Module } from '@nestjs/common';
+import { PersistenceService } from './persistence.service';
+
+@Module({
+  providers: [PersistenceService],
+  exports: [PersistenceService]
+})
+
+export class PersistenceModule {}
+```
+## Using the Persistence Service in Other Parts of the Application
+
+With the `PersistenceService` available, let's demonstrate how to use it in a different module. For this example, let's assume we have a `UserModule` where we want to interact with the database to manage user data.
+
+### Creating a User Module
+
+First, generate a `UserModule`, `UserService`, and `UserController` using the NestJS CLI:
+
+```sh
+nest generate mo user
+nest generate s user
+nest generate co user
+```
+This will create the necessary files for the `UserModule`, `UserService`, and `UserController`. Next, we'll update the `UserService` to use the `PersistenceService`.
+### Injecting PersistenceService
+Open the `user.service.ts` file and update it to inject the `PersistenceService` in the constructor:
+```typescript
+import { Injectable } from '@nestjs/common';
+import { PersistenceService } from '../persistence/persistence.service';
+import { createUser } from './dto/create-user.dto';
+import { User } from '@prisma/client';
+import { hashPassword } from './utils/user.utils';
+
+@Injectable()
+export class UserService {
+  constructor(private readonly persistenceService: PersistenceService) {}
+
+  async createUser(createNewUser: createUser): Promise<User> {
+    const passwordHash = await hashPassword(createNewUser.password);
+    
+    const user = await this.persistenceService.user.create({
+        data: {
+          email: createNewUser.email,
+          displayName: createNewUser.displayName,
+          password: passwordHash,
+        },
+    });
+    return user
+  }
+
+  async getUserById(id: number) {
+    return this.persistenceService.user.findUnique({
+      where: { id },
+    });
+  }
+}
+```
+In this example, the `UserService` class is using the `PersistenceService` to interact with the newly create `User` table in the database. The `createUser` method creates a new user, and the `getUserByEmail` method retrieves a user by their email address. 
+
+In my example project, there is also a utility used to hash the users passwords. When storing sensitive data such as passwords, it is super important to securely store the data by encrypting it.
+
+### Implementing the UserService
+Now that we have a `UserService` we can call it's functions in the `UserController`. We can update the `user.controller.ts` script to the following:
+``` typescript
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { User } from '@prisma/client';
+import { UserService } from './user.service';
+import { createUser } from './dto/create-user.dto';
+
+@Controller('user')
+export class UserController {
+    constructor(private readonly userService: UserService) {}
+
+    // Get a user
+    // Endpoint: localhost:3000/user/:id
+    @Get(':id')
+    async get(@Param('id', new ParseIntPipe()) id: number): Promise<User> {
+        return await this.userService.getUserById(id);
+    }
+    
+    // Create a user
+    // Endpoint: localhost:3000/user
+    @Post()
+    async create(@Body() createUser: createUser){
+        return await this.userService.createUser(createUser);
+    }
+}
+```
+In the above controller, we have created 2 new endpoints for our application:
+- GET `/user/:id` - finds a user using the provided ID
+- POST `/user` - creates a new user with data from the JSON body
+### Finishing Up
+Next, we make sure the `UserService` & `UserController` has been to the `UserModule` and that we are importing our `PersistenceModule`. Open the `user.module.ts` file and update it as follows:
+``` typescript
+import { Module } from '@nestjs/common';
+import { UserService } from './user.service';
+import { UserController } from './user.controller';
+import { PersistenceModule } from '../persistence/persistence.module';
+
+@Module({
+  imports: [PersistenceModule],
+  providers: [UserService],
+  controllers: [UserController]
+})
+
+export class UserModule {}
+```
+
+By importing the `PersistenceModule`, the `UserModule` can use the `PersistenceService` provided by it.
+## Testing out the service
+We can now spin up our test environment by running the following command in the root directory of our project:
+```sh
+npm run start:dev
+```
+
+This will start our API locally where we can test our newly created endpoints. As we can see, they can create a user and return a user:
+#### Create User
+![](/blog/create-user.png)
+#### Get User
+![](/blog/get-user.png)
+Please note that in a production app these would require further validation and authentication.
+## Wrapping Up
+In this article, we have covered how to set up Prisma in a NestJS project and build a persistence module. We also demonstrated how to integrate this module into other services. By following these steps, you can manage database interactions in your NestJS applications.
+### Summary of Steps:
+1. **Setting up Prisma**:
+    - Initialize Prisma with `npx prisma init`.
+    - Configure the database connection in `.env`.
+    - Define database schema in `prisma.schema`.
+    - Migrate the schema with `npx prisma migrate dev --name init`.
+2. **Creating the Persistence Module**:
+    - Generate the `persistence` module and service.
+    - Implement the `PersistenceService` to manage Prisma client connections.
+    - Export the `PersistenceService` from the `PersistenceModule`.
+3. **Integrating and Using the Persistence Module**:
+    - Import `PersistenceModule` into the main `AppModule`.
+    - Create other modules (e.g., `UserModule`) and services (e.g., `UserService`) that use the `PersistenceService`.
+With this setup, you now have a foundation for handling database interactions in your NestJS application. Happy coding and I hope this helps!

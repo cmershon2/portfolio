@@ -1,0 +1,41 @@
+---
+title: "What I wish I knew when I started building APIs"
+publishedAt: "2024-06-18"
+summary: "Idk man, something cool!"
+audio: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/article-1.wav"
+headerImage: "/blog/what-makes-a-good-api.png"
+---
+In my day-to-day as a support engineer, I work with and troubleshoot connections to a ton of APIs revolving around marketing data such as Facebook's Graph API, Snapchat, Pinterest, and many more. Outside of working in support, I spend a significant amount of my free time learning more about how the web works, and how services are built & maintained, and have used this knowledge to create some of my APIs. Recently, I have been exploring video transcoding with my current project, [Chillwave](https://github.com/cmershon2/Chillwave), and I have been building a RESTful API that implements some of the best practices (well, to the best of my abilities).
+## What is an API?
+Let's start from the basics, an API (Application Programming Interface) allows different applications & services to communicate and exchange data seamlessly. With the fast pace of development and how interconnected online services are, the API model has become one of the backbones of software development. With that in mind, there are many different architectural styles for building an API such as SOAP, GraphQL, RPC, MQTT, and so on. While I have worked with the four API architectures mentioned, I prefer to build products with the RESTful architecture. This is mainly due to the simplicity, scalability, and adherence to widely adopted web standards that the RESTful architecture offers.
+## The Principles of REST 
+So now that we have a baseline understanding of what an API is, let's discuss REST (Representational State Transfer). This architectural style uses a resource-based approach, stateless communication, and standard HTTP methods (GET, POST, PATCH, PUT, DELETE) for accessing or modifying resources. By using stateless communication, it means that each message does not rely on the previous one which reduces coupling. By following these principles, you can build a truly RESTful API that can be easily understood, maintained, and consumed by users.
+## Best Practices for RESTful API Design
+### Using Nouns for Resource Naming
+When designing a RESTful API, it is important to use nouns for naming resources. Resources should be defined with descriptive names that represent the entities they are responsible for. For example:
+- `/getUsers` is a verb-based URL and should be avoided
+- `/users` is a noun-based URL which should be used
+As RESTful APIs follow standard HTTP methods, noun-based URLs can be reused for different functions such as GET to retrieve a user or PATCH to update a user.
+### Following the HTTP Methods  
+The RESTful API architecture utilizes the standard HTTP methods (GET, POST, PATCH, PUT, DELETE). With this in mind, these methods must correspond to the correct operation. The intended use of each of these method is the following:
+- `GET` should be used for retrieving data
+- `POST` for creating new resources
+- `PUT` or `PATCH` for updating existing resources
+- `DELETE` for removing resources
+Staying consistent with this convention makes your API more intuitive and easier to understand for developers. These are the most common HTTP methods, however, a comprehensive list can be found here: [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
+### Use Proper Status Codes 
+While HTTP methods are important, it is equally important to provide a standardized way to return the results of an API request. This can be done by making sure to use the correct status code to show a success (e.g., 200 OK), client-side error (e.g., 400 Bad Request), server-side error (e.g., 500 Internal Server Error), or, my personal favorite, when the server refuses to brew coffee with a teapot (e.g., 418 I'm a teapot). A full list of status codes can be found here: [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses). By following this practice, it will enhance the usability and maintainability of your API
+### Implement Versioning 
+Over time, your API will likely evolve with changes and additions. When this happens, the functionality may change which can result in existing client applications breaking. With this in mind, you should consider implementing versioning into your API. The most common versioning strategy I have encountered is including the version in the URI (e.g., /v1/users, /v2/users). However, some APIs also include header versions (e.g., Accept-Version: v1) which are included in the header of the API call. Once you have chosen a versioning strategy that works for your use case, it is important to stay consistent.
+### Document Your API
+When building your API, it can sometimes be easy to forget that fellow developers are also users; possibly the most important users as they can use your API to extend it to reach more people. With this in mind, it is crucial to document your API so developers can easily understand how to interact with your API effectively. You can use tools like [Swagger](https://swagger.io/) which follow the [OpenAPI](https://www.openapis.org/) documentation standard to automatically generate interactive documentation that includes endpoint descriptions, request/response examples, and other details such as authentication. By making well-documented APIs, it makes it easier for developers to adopt and integrate with other applications.
+### Implement Proper Error Handling 
+Even when you've built a well-designed API, errors and failures can occur. Because of this, you should implement clear and informative error handling. This means returning meaningful error messages to API consumers. It is also important to structure your error responses consistently, including error status codes, descriptive messages, and any other relevant details.
+### Consider Performance and Scalability 
+As per a statistic by Amazon, every 100ms of latency costs them 1% in sales. While it is difficult to verify this statistic, there is no doubt that latency can impact user experience. With this in mind, it is essential to ensure that your API can handle increased loads and traffic efficiently. You can optimize performance with strategies such as caching, rate limiting, and load balancing. This can enhance the scalability of your API. In addition to this, you can use asynchronous processing for long-running tasks to avoid blocking the main request/response cycle. This was an issue I had to address when handling user video uploads in my [Chillwave]() project. Below is the architecture I came up with when developing the API to solve this.
+![](/blog/chillwave-video-upload-pipeline.png)
+As users can create a resource-intensive task (video transcoding) at any time, these uploads were processed using a queue, I used [BullMQ](https://bullmq.io/) for my use case. As video processing is intensive for both CPU and RAM usage, I used serverless Lambda functions outside of the core API. This allowed for the resources of the core API server to only be used for the API and not for video processing resulting in a more stable API.
+### Implement Security Measures
+Security should always be a priority when designing and building your API. You can utilize authentication and authorization mechanisms, such as role-based-access-control (RBAC), to control who accesses your API. This can be combined with industry-standard encryption techniques like HTTPS and TLS to protect data in transit which can help avoid man-in-the-middle attacks. You should also follow best practices for secure coding, input validation, and protection against common vulnerabilities (e.g., SQL injection, and cross-site scripting).
+
+Following these practices can help you create well-designed and user-friendly RESTful APIs that are easy to understand, maintain, and easier to integrate with other systems. APIs are the building blocks of the modern web ecosystem and investing time into the proper design & implementation can be a major pay-off for scalability and productivity. I wish I had fully understood these practices when I first started building APIs and I hope this can help someone too.

@@ -1,0 +1,59 @@
+---
+title: "Expense Tracker"
+summary: "Expense Tracker is my first Spring Boot project, featuring user registration, expense management, categorization, and statistics. It uses a 3-tier architecture, Docker, and MySQL."
+headerImage: "/projects/expense-tracker.png"
+startDate: "2021-06-06"
+endDate: "2021-08-17"
+status: "Archived"
+audio: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/expense-tracker.wav"
+githubUrl: "https://github.com/cmershon2/expense-tracker"
+technologies: ["Spring Boot", "Java", "Postgres", "Bootstrap", "HTML"]
+keywords: ["Spring Boot Expense Tracker", "Expense Tracker", "Expense Categorization", "Filter and Sort Expenses", "Bootstrap UI Expense Tracker"]
+---
+
+Expense Tracker is a web application that allows users to easily track and categorize expenses. This project was a significant milestone for me as a developer as it is the first web service and RESTful API I built. It provided me with a deep understanding into building web services and blending front-end technologies with a back-end framework.
+## Key Features
+- **User Registration:** Users can create accounts to manage their personal expenses.
+- **Expense Management:** The application supports adding, editing, and deleting expenses, making it easy for users to keep their records up to date.
+    ![Expense Tracker Dashboard](/projects/expense-tracker/15.png)
+- **Categorization:** Expenses can be categorized into customizable groups with unique names, icons, & colors.
+- **Filtering and Sorting:** Users can filter and sort their expenses based on categories, dates, or amounts, offering a customizable view of their spending.
+    ![Expense Tracker Filtering](/projects/expense-tracker/13.png)
+- **Summary and Statistics:** The application provides a summary of total expenses and presents statistics through charts or graphs, giving users insightful overviews of their spending habits.
+- **Extensive Documentation:** Comprehensive platform and API documentation was created to guide users and developers through the functionalities and integrations, ensuring ease of use and extensibility.
+    ![Expense Tracker Documentation](/projects/expense-tracker/14.png)
+
+## Technologies Used
+- **[Spring Boot](https://spring.io/projects/spring-boot):** Utilized for building the backend API, providing a framework for handling business logic and data management.
+- **HTML, CSS, JavaScript:** These core web technologies were used to build the frontend, ensuring a responsive and interactive user interface.
+- **[Bootstrap](https://getbootstrap.com/):** Leveraged to create a visually appealing and mobile-friendly design.
+- **[Postgres](https://www.postgresql.org/):** Employed for storing user and expense data securely and efficiently.
+
+## Architecture
+The Expense Tracker project follows a simple 3-tier architecture, attemping separation of concerns and modularity:
+![Expense Tracker Architecture](/projects/expense-tracker/expense-tracker-architecture-wide.png)
+1. **Presentation Tier:** The frontend, built with HTML, CSS, and JavaScript, forms the presentation layer, providing a user-friendly interface.
+2. **Application Tier:** The business logic is handled by the Spring Boot backend, which processes user requests, applies the necessary business rules, and communicates with the database.
+3. **Data Tier:** Postgres serves as the data layer, responsible for storing and retrieving user and expense data.
+
+This application utilized GitHub actions to build images of the services which were then deployed to Digital Ocean droplets. 
+
+## Data Model
+The Expense Tracker used a multi-tenant approach to data storage. This means that all client data was stored together with the backend dictating the data each user had access to. The data model for the Expense Tracker project was designed to efficiently store and manage user, category, and transaction data. Below is an overview of the main tables and their relationships:
+![Expense Tracker Data Model](/projects/expense-tracker/expense-tracker-data-model.png)
+Additionally, sequences were created to auto-increment the primary keys for each table:
+- `et_users_seq` for `user_id`
+- `et_categories_seq` for `category_id`
+- `et_transactions_seq` for `transaction_id`
+
+This relational database schema ensures data integrity and allows for efficient querying and management of user, category, and transaction data.
+
+## Learning Experience
+Working on the Expense Tracker was an invaluable learning experience. Prior to this project, I had only build frontend projects from either static sites or utilizing the JAM stack. This project holds a special place in my heart as it was my first project using Spring Boot, my first RESTful API, and my first web service.
+
+The project is incredibly rough around the edges and uses quite a few bad practices such as exposed keys, a poor attempt at a mono-repo, & countless other issues. However, it was a start to a solid foundation for my understanding of full-stack development.  I encountered and overcame numerous challenges, from setting up the Spring Boot environment to integrating the frontend with the backend seamlessly. Each hurdle provided a learning opportunity, enhancing my problem-solving skills and technical knowledge.
+
+## Conclusion
+For me, the Expense Tracker project represents much more than just a tool for managing expenses; it marks the beginning of my journey in software development & web services. 
+
+This project not only taught me many technical skills but also taught me the importance of perseverance and continuous learning. As I continue to grow as a developer, I look back on this project knowing how far I have come and how much my knowledge has grown.
