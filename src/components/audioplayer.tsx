@@ -35,6 +35,35 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, metadata }) => {
       audio.addEventListener('loadedmetadata', () => {
         setDuration(audio.duration);
         setIsLoading(false);
+
+        const setupMediaSession = () => {
+          if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+              title: metadata.title,
+              artist: metadata.artist,
+              artwork: [
+                { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/96x96.png", sizes: '96x96', type: 'image/jpeg' },
+                { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/128x128.png", sizes: '128x128', type: 'image/jpeg' },
+                { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/192x192.png", sizes: '192x192', type: 'image/jpeg' },
+                { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/256x256.png", sizes: '256x256', type: 'image/jpeg' },
+                { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/384x384.png", sizes: '384x384', type: 'image/jpeg' },
+                { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/512x512.png", sizes: '512x512', type: 'image/jpeg' },
+              ]
+            });
+      
+            navigator.mediaSession.setActionHandler('play', () => {
+              audioRef.current?.play();
+              setIsPlaying(true);
+            });
+            navigator.mediaSession.setActionHandler('pause', () => {
+              audioRef.current?.pause();
+              setIsPlaying(false);
+            });
+            navigator.mediaSession.setActionHandler('seekbackward', () => skipBackward());
+            navigator.mediaSession.setActionHandler('seekforward', () => skipForward());
+          }
+        };
+
         setupMediaSession();
       });
       return () => {
@@ -43,33 +72,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, metadata }) => {
     }
   }, [metadata]);
 
-  const setupMediaSession = () => {
-    if ('mediaSession' in navigator) {
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: metadata.title,
-        artist: metadata.artist,
-        artwork: [
-          { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/96x96.png", sizes: '96x96', type: 'image/jpeg' },
-          { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/128x128.png", sizes: '128x128', type: 'image/jpeg' },
-          { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/192x192.png", sizes: '192x192', type: 'image/jpeg' },
-          { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/256x256.png", sizes: '256x256', type: 'image/jpeg' },
-          { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/384x384.png", sizes: '384x384', type: 'image/jpeg' },
-          { src: "https://casey-mershon-blog.nyc3.cdn.digitaloceanspaces.com/images/512x512.png", sizes: '512x512', type: 'image/jpeg' },
-        ]
-      });
-
-      navigator.mediaSession.setActionHandler('play', () => {
-        audioRef.current?.play();
-        setIsPlaying(true);
-      });
-      navigator.mediaSession.setActionHandler('pause', () => {
-        audioRef.current?.pause();
-        setIsPlaying(false);
-      });
-      navigator.mediaSession.setActionHandler('seekbackward', () => skipBackward());
-      navigator.mediaSession.setActionHandler('seekforward', () => skipForward());
-    }
-  };
 
   const togglePlayPause = () => {
     if (audioRef.current) {

@@ -18,7 +18,7 @@ export default async function ProjectPage() {
     <section>
       <BlurFade delay={BLUR_FADE_DELAY}>
         <h1 className="font-medium text-2xl tracking-tighter">Projects</h1>
-        <p className="font-medium tracking-tighter mb-8">I've worked on a variety of projects, from simple websites to complex web applications.</p>
+        <p className="font-medium tracking-tighter mb-8">I&apos;ve worked on a variety of projects, from simple websites to complex web applications.</p>
       </BlurFade>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-w-[800px] mx-auto">
         {posts
