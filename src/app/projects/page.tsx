@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Projects",
-  description: "My thoughts on software development, life, and more.",
+  description: "I've worked on a variety of projects, from simple websites to complex web applications.",
 };
 
 const BLUR_FADE_DELAY = 0.04;

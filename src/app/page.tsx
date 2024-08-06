@@ -8,10 +8,16 @@ import { Badge } from "@/components/ui/badge";
 import { DATA } from "@/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
+import { metadata } from "./layout";
+import { getProjectPosts } from "@/data/projects";
+import { formatDateShort } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const BLUR_FADE_DELAY = 0.04;
 
-export default function Page() {
+export default async function Page() {
+  const projects = await getProjectPosts();
+
   return (
     <main className="flex flex-col min-h-[100dvh] space-y-10">
       <section id="hero">
@@ -131,70 +137,44 @@ export default function Page() {
             </div>
           </BlurFade>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-w-[800px] mx-auto">
-            {DATA.projects.map((project, id) => (
-              <BlurFade
-                key={project.title}
-                delay={BLUR_FADE_DELAY * 12 + id * 0.05}
-              >
-                <ProjectCard
-                  href={project.href}
-                  key={project.title}
-                  title={project.title}
-                  description={project.description}
-                  dates={project.dates}
-                  tags={project.technologies}
-                  image={project.image}
-                  video={project.video}
-                  links={project.links}
-                />
+            {projects
+            .sort((a, b) => {
+              if (
+                new Date(a.metadata.startDate) > new Date(b.metadata.startDate)
+              ) {
+                return -1;
+              }
+              return 1;
+            })
+            .filter((p) => p.metadata.featured == "true")
+            .map((post, id) => (
+              <BlurFade delay={BLUR_FADE_DELAY * 2 + id * 0.05} key={post.slug}>
+                <Link
+                  className="flex flex-col space-y-1 mb-4"
+                  href={`/projects/${post.slug}`}
+                >
+                  <ProjectCard 
+                    title={post.metadata.title} 
+                    image={post.metadata.headerImage}
+                    description={post.metadata.summary} 
+                    dates={`${formatDateShort(post.metadata.startDate)} - ${formatDateShort(post.metadata.endDate)}`} 
+                    tags={post.metadata.technologies}
+                    
+                  />
+                </Link>
               </BlurFade>
-            ))}
+              ))}
           </div>
-        </div>
-      </section>
-      <section id="hackathons">
-        <div className="space-y-12 w-full py-12">
-          <BlurFade delay={BLUR_FADE_DELAY * 13}>
+          <BlurFade delay={BLUR_FADE_DELAY * 12}>
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-foreground text-background px-3 py-1 text-sm">
-                  Hackathons
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  I like building things
-                </h2>
-                <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  During my time in university, I attended{" "}
-                  {DATA.hackathons.length}+ hackathons. People from around the
-                  country would come together and build incredible things in 2-3
-                  days. It was eye-opening to see the endless possibilities
-                  brought to life by a group of motivated and passionate
-                  individuals.
-                </p>
-              </div>
+              <Button>
+                <Link href='/projects'>Check out the rest</Link>
+              </Button>
             </div>
           </BlurFade>
-          <BlurFade delay={BLUR_FADE_DELAY * 14}>
-            <ul className="mb-4 ml-4 divide-y divide-dashed border-l">
-              {DATA.hackathons.map((project, id) => (
-                <BlurFade
-                  key={project.title + project.dates}
-                  delay={BLUR_FADE_DELAY * 15 + id * 0.05}
-                >
-                  <HackathonCard
-                    title={project.title}
-                    description={project.description}
-                    location={project.location}
-                    dates={project.dates}
-                    image={project.image}
-                    links={project.links}
-                  />
-                </BlurFade>
-              ))}
-            </ul>
-          </BlurFade>
         </div>
       </section>
+
       <section id="contact">
         <div className="grid items-center justify-center gap-4 px-4 text-center md:px-6 w-full py-12">
           <BlurFade delay={BLUR_FADE_DELAY * 16}>
@@ -206,15 +186,14 @@ export default function Page() {
                 Get in Touch
               </h2>
               <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Want to chat? Just shoot me a dm{" "}
+                Want to chat? Let's connect and shoot me a dm{" "}
                 <Link
-                  href="#"
+                  href="https://dub.sh/casey-linkedin"
                   className="text-blue-500 hover:underline"
                 >
-                  with a direct question on twitter
+                  on LinkedIn
                 </Link>{" "}
-                and I&apos;ll respond whenever I can. I will ignore all
-                soliciting.
+                and I&apos;ll respond whenever I can!
               </p>
             </div>
           </BlurFade>

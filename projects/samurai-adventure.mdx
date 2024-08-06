@@ -1,0 +1,45 @@
+---
+title: "Samurai Adventure"
+summary: "A web based multiplayer game built using Phaser JS, Next JS, and Firebase Realtime Database. Explore the map in realtime with friends in this samurai themed game!"
+headerImage: "/projects/samurai-adventure.png"
+startDate: "2022-12-22"
+endDate: "2022-12-29"
+status: "Active"
+featured: "true"
+websiteUrl: "https://samurai-adventure.projecthost.dev/"
+technologies: ["Next JS", "Tailwind", "Firebase", "Phaser JS"]
+keywords: ["Next JS", "Multiplayer game", "Firebase", "Realtime Database", "Phaser JS"]
+---
+This is what I would consider to be a micro project, I built it over a weekend for fun to learn Phase JS. I have worked a lot with Unity in the past and this seemed like a fun opportunity to build a web-based game.
+
+## Project Description
+Samurai Adventure is a bare-bones multiplayer game built using Phaser JS and Firebase. The game originally was going to have many more features but I did not want to encounter scope creep. 
+
+## Technology Used
+- Next JS
+	- Tailwind CSS
+	- Custom built react components
+- Firebase
+	- Realtime database
+- [Phaser JS](https://phaser.io/)
+	- Top down, cell based movement
+
+## Project Objectives
+![Gameplay Example](/projects/samurai-adventure/samurai-adventure-example.gif)
+The objective for this project was very simple - Create a 2D pixel game with multiplayer. This was done by monitoring the player's local position and sending any position or rotation changes to the Firebase Realtime Database.
+
+Once Firebase received the updated position or rotation data, it sent out the destination of the local player to the rest of the connected player. Once a connected player received the packet of new information, the client would interpolate the player to the correct position. 
+
+### What is interpolation?
+I had no idea what this concept was upon starting this project. To put it simply, interpolation is the concept of smoothly transitioning from one value to another one.
+
+As the packet being sent from the client to the server contained the destination of where the player was going in an XY position and the direction the player would end in, we could make an educated guess on how the player got to that point. While this method is not 100% accurate on the path a user might take to get to a point, it is accurate enough to convey player movement.
+
+### Artwork
+While I am a traditional artist, I do not have a lot of experience with making pixel art. Because of this, I sourced most of the 3D resources from free packs on [Itch.io](https://itch.io). Here are a few asset packs I used:
+- [Ninja Adventure Asset Pack](https://pixel-boy.itch.io/ninja-adventure-asset-pack)
+- [Grassy Mountains](https://vnitti.itch.io/grassy-mountains-parallax-background)
+
+
+## Conclusion
+Overall, this was a fun weekend project that let me think creatively and apply different aspects to a website that I usually never would. It was fun to share the project with friends and watch as we all would walk around exploring the dungeon as samurai characters. 
