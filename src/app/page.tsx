@@ -186,7 +186,7 @@ export default async function Page() {
                 Get in Touch
               </h2>
               <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Want to chat? Let's connect and shoot me a dm{" "}
+                Want to chat? Let&apos;s connect and shoot me a dm{" "}
                 <Link
                   href="https://dub.sh/casey-linkedin"
                   className="text-blue-500 hover:underline"
