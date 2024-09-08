@@ -5,7 +5,6 @@ headerImage: "/projects/samurai-adventure.png"
 startDate: "2022-12-22"
 endDate: "2022-12-29"
 status: "Active"
-featured: "true"
 websiteUrl: "https://samurai-adventure.projecthost.dev/"
 technologies: ["Next JS", "Tailwind", "Firebase", "Phaser JS"]
 keywords: ["Next JS", "Multiplayer game", "Firebase", "Realtime Database", "Phaser JS"]
@@ -25,7 +24,6 @@ Samurai Adventure is a bare-bones multiplayer game built using Phaser JS and Fir
 	- Top down, cell based movement
 
 ## Project Objectives
-![Gameplay Example](/projects/samurai-adventure/samurai-adventure-example.gif)
 The objective for this project was very simple - Create a 2D pixel game with multiplayer. This was done by monitoring the player's local position and sending any position or rotation changes to the Firebase Realtime Database.
 
 Once Firebase received the updated position or rotation data, it sent out the destination of the local player to the rest of the connected player. Once a connected player received the packet of new information, the client would interpolate the player to the correct position. 

@@ -1,0 +1,78 @@
+---
+title: "Chillwave"
+summary: "A scalable video platform using TensorFlow for content safety. Features queued processing, multi-resolution transcoding, and interactive elements."
+headerImage: "/projects/chillwave.png"
+startDate: "2024-04-27"
+endDate: "Ongoing"
+status: "Ongoing"
+featured: "true"
+githubUrl: "https://github.com/cmershon2/Chillwave"
+websiteUrl: "https://chillwave.tv/"
+technologies: ["Nest JS","FFmpeg","TensorFlow","Next JS","Tailwind"]
+keywords: ["Next JS", "TensorFlow", "FFmpeg", "Chillwave", "Chillwave.tv", "Nest JS"]
+---
+Chillwave is an innovative, open-source video sharing platform designed to empower content creators. Similar to YouTube, it provides a space for users to upload their videos and engage with their audience through interactive features. The platform is built with a focus on scalability, content safety, and user experience.
+
+## Key Features
+
+- User authentication and account management
+- Video upload and storage
+- Content filtering for safety
+- Automated video transcoding
+- Commenting system
+- Interactive user engagement tools
+
+## Technologies
+- Next JS 
+- Nest JS 
+- React
+- TensorFlow
+
+## Technical Architecture
+![Architecture](/projects/chillwave/chillwave-architecture.png)
+Chillwave employs a microservice architecture, consisting of four main components:
+
+1. **Core API**: Handles authentication, video/content upload queues, commenting, and account management.
+2. **Transcoding Worker**: Processes videos into multiple resolutions using HLS format.
+3. **Content Filtering Worker**: Utilizes AI to detect and filter explicit content.
+4. **Client**: Provides the user interface for the platform.
+
+### Video Processing Pipeline
+Originally the video pipeline & processing was going to be done via AWS Lambda functions. This looked like the image below:
+![Upload Pipeline](/projects/chillwave/upload-pipeline.png)
+However, after further testing & research, I found that Lambda functions lacked the processing power to process larger videos. This is mainly caused by the resources required to transcode large videos with FFmpeg. As larger videos (1440p and above) could take up to 20-30 minutes to transcode to 1080p, I pivoted to use dedicated workers. These workers are essentially Nest JS microservices that listen to the BullMQ queues for new jobs to process.
+
+With that in mind, the video processing pipeline uses the following steps:
+1. Content creators upload videos which are stored in a temporary private S3 bucket.
+2. BullMQ manages the video upload queue.
+3. The Content Filtering Worker processes each video:
+   - Uses a TensorFlow model to detect explicit content.
+   - Safe videos proceed to transcoding.
+   - Unsafe videos are removed, and the user's account is flagged.
+   - Uncertain cases are flagged for manual review.
+4. The Transcoding Worker processes approved videos:
+   - Transcodes videos into multiple resolutions.
+   - Prepares videos in HLS format for efficient streaming.
+   - Final HLS playlists & chunks are uploaded to a S3 bucket.
+
+## Technical Highlights
+
+- **Microservice Architecture**: Ensures scalability and maintainability.
+- **BullMQ**: Manages efficient queuing for video processing.
+- **AI-Powered Content Filtering**: Enhances platform safety and reduces manual moderation.
+- **HLS Video Formatting**: Provides adaptive streaming for various devices and network conditions.
+- **Mono-repo Structure**: Utilizes Turbo Repo for efficient code management.
+
+## Learning Outcomes
+
+Through the development of Chillwave, I've gained valuable experience in:
+
+1. Implementing proper mono-repo structures using Turbo Repo.
+2. Designing and managing queue architectures in stateless environments.
+3. Integrating AI models for content moderation.
+4. Building scalable microservice architectures.
+5. Implementing video processing pipelines.
+
+## Project Status
+
+Chillwave is an ongoing project, continuously evolving with new features and improvements. The current version demonstrates core functionalities while providing a solid foundation for future enhancements.

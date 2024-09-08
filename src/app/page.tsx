@@ -157,7 +157,7 @@ export default async function Page() {
                     title={post.metadata.title} 
                     image={post.metadata.headerImage}
                     description={post.metadata.summary} 
-                    dates={`${formatDateShort(post.metadata.startDate)} - ${formatDateShort(post.metadata.endDate)}`} 
+                    dates={`${formatDateShort(post.metadata.startDate)} - ${post.metadata.endDate != "Ongoing"? formatDateShort(post.metadata.endDate) : "Now"}`} 
                     tags={post.metadata.technologies}
                     
                   />

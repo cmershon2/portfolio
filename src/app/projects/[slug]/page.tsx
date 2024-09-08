@@ -118,7 +118,7 @@ export default async function Project({
       <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-[650px]">
         <Suspense fallback={<p className="h-5" />}>
             <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                Timeline: {formatDateShort(project.metadata.startDate)} to {formatDateShort(project.metadata.endDate)}
+                Timeline: {formatDateShort(project.metadata.startDate)} to {project.metadata.endDate != "Ongoing"? formatDateShort(project.metadata.endDate) : "Now"}
             </p>
             <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 Status: 
